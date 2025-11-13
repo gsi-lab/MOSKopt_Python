@@ -1,0 +1,12 @@
+# Python
+# Ignore all .pyc files and __pycache__ by default
+*.pyc
+__pycache__/
+
+# EXCEPT for .pyc files in the core/ directory
+!core/*.pyc
+
+# Editor specific files
+.vscode/
+.DS_Store
+

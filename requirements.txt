@@ -1,0 +1,23 @@
+# MOSKopt Python Package Dependencies
+# Core scientific computing and optimization libraries
+
+# Numerical computing
+numpy>=1.19.0
+scipy>=1.5.0
+
+# Machine learning and surrogate modeling
+scikit-learn>=0.24.0
+
+# Design of experiments
+pyDOE>=0.3.8
+
+# Data manipulation and analysis
+pandas>=1.1.0
+
+# Particle swarm optimization
+pyswarm>=0.6
+
+# Optional: AVEVA Process Simulation integration
+# Note: These are not available via pip and must be installed separately
+# - AVEVA Process Simulation software
+# - AVEVA Python Interface (simcentralconnect)
