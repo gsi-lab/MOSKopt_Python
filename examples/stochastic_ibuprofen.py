@@ -3,7 +3,7 @@ Stochastic Optimization Example using MOSKopt with AVEVA Process Simulation.
 
 This example demonstrates stochastic optimization using MOSKopt with
 Monte Carlo uncertainty quantification and AVEVA Process Simulation integration.
-It optimizes a chemical process while handling uncertainty in raw material price
+It optimizes ibuprofen continuous manufacturing process while handling uncertainty in raw material price
 and simulation failures.
 
 The example uses:
@@ -43,15 +43,15 @@ warnings.filterwarnings(
 )
 
 # Note: This example uses the core AVEVASimulator from moskopt.core._simulator
-# Users can modify the simulation configuration below for their own projec
+# Users can modify the simulation configuration below for their own project
 
 
 def run_aveva_example(
     max_iterations=75,  # Full optimization iterations
     num_seed_points=25,  # Proper initial design for stochastic
     num_repetitions=100,  # Good balance of MC samples for uncertainty
-    swarm_size=40,  # Proper PSO size for stochastic optimization
-    max_iter_pso=40,  # Proper PSO iterations for quality
+    swarm_size=30,  # Proper PSO size for stochastic optimization
+    max_iter_pso=20,  # Proper PSO iterations for quality
 ):
     """
     Run stochastic optimization example with MOSKopt and AVEVA Process Simulation.
@@ -64,15 +64,15 @@ def run_aveva_example(
     Parameters
     ----------
     max_iterations : int, optional
-        Maximum number of adaptive iterations. Default: 75
+        Maximum number of adaptive iterations.
     num_seed_points : int, optional
-        Number of initial design points. Default: 25
+        Number of initial design points.
     num_repetitions : int, optional
-        Number of Monte Carlo samples for uncertainty. Default: 100
+        Number of Monte Carlo samples for uncertainty.
     swarm_size : int, optional
-        PSO swarm size for acquisition function optimization. Default: 40
+        PSO swarm size for acquisition function optimization.
     max_iter_pso : int, optional
-        Maximum PSO iterations for acquisition function optimization. Default: 40
+        Maximum PSO iterations for acquisition function optimization.
 
     Returns
     -------
@@ -137,20 +137,16 @@ def run_aveva_example(
         "Verbose": False,  # Enable progress output
         "SwarmSize": swarm_size,  # PSO swarm size (optimized default)
         "MaxIterPSO": max_iter_pso,  # Maximum PSO iterations (optimized default)
-        "MaxDuplicateAttempts": 5,  # Maximum attempts to find unique points
-        # Uncertainty hedge and constraint tolerances
-        "UncertaintyHedge": "Mean",  # Use mean for feasibility
+        "MaxDuplicateAttempts": 3,  # Maximum attempts to find unique points
+        # Constraint settings
         "NumCoupledConstraints": 3,  # Number of constraints
         "CoupledConstraintTolerances": [1e-3] * 3,  # Constraint tolerances
         # Alternative infill criteria (users can change these):
-        # "InfillCriterion": "FEI",               # Feasible Expected Improvement
-        # "InfillCriterion": "cAEI",              # Constrained Augmented Expected Improvement
-        # "InfillCriterion": "AEI",               # Augmented Expected Improvement
+        # "InfillCriterion": "mcFEI",             # multiple constrained Feasibility Enhanced Improvement
         # "InfillCriterion": "EI",                # Expected Improvement
-        # "InfillCriterion": "UCB",               # Upper Confidence Bound
-        # Alternative optimization solvers (users can change these):
-        # "InfillSolver": "lbfgs",                # L-BFGS local optimization
-        # "InfillSolver": "random",               # Random sampling
+        # "InfillCriterion": "AEI",               # Augmented Expected Improvement
+        # "InfillCriterion": "cAEI",              # Constrained Augmented Expected Improvement
+        # "InfillCriterion": "FEI",               # Feasibility Enhanced Constrained Improvement
         # AVEVA Process Simulation configuration
         "sim_name": "IbuprofenProcessSimulation",  # AVEVA simulation file name
         "snapshot_name": "Pro 1",  # AVEVA snapshot name
@@ -262,15 +258,15 @@ def run_aveva_example(
 
     # Print optimal decision variables with descriptive names
     var_names = ["V2", "T2", "RatioMEKIbap", "V1", "T1", "RatioDecIbap"]
+    constraint_names = ["R1.tau", "R2.tau", "Yield"]  # Match options configuration
 
     # Extract result data using helper function
-    best_x = extract_result_data(result, "x")
     x_history = extract_result_data(result, "x_history", [])
     f_history = extract_result_data(result, "f_history", [])
     g_history = extract_result_data(result, "g_history", [])
     iteration = extract_result_data(result, "iteration", 0)
     converged = extract_result_data(result, "converged", False)
-    best_idx = extract_result_data(result, "best_idx", None)
+    # best_idx = extract_result_data(result, "best_idx", None)
 
     # ============================================================================
     # SAVE RESULTS TO CSV FILES
@@ -316,7 +312,7 @@ def run_aveva_example(
         # Create DataFrame and save to CSV
         history_df = pd.DataFrame(history_data)
         history_df.to_csv(history_csv_path, index=False)
-        # print(f"✓ Saved optimization history to: {history_csv_path}")
+        print(f"✓ Saved adaptive progress to: {history_csv_path}")
 
     except Exception:
         # print(f"⚠ Warning: Could not save history CSV: {e}")
@@ -442,12 +438,4 @@ if __name__ == "__main__":
     # print(f"Iterations completed: {iteration}")
     # print(f"Converged: {converged}")
 
-    # Information about alternative configurations
-    # print("\nConfiguration Options:")
-    # print("   - Infill criteria: 'mcFEI' (current), 'FEI', 'cAEI', 'AEI', 'EI', 'UCB'")
-    # print("   - Optimization solvers: 'particleswarm' (current), 'lbfgs', 'random'")
-    # print("   - To use alternatives: Change the 'InfillCriterion' and 'InfillSolver' in options")
-    # print("   - PSO parameters are optimized for speed while maintaining quality")
-    # print("   - Monte Carlo samples can be increased for better uncertainty quantification")
-
-    # print("\nExample completed successfully!")
+    print("\nExample completed successfully!")

@@ -3,7 +3,7 @@ Deterministic Optimization Example using MOSKopt with AVEVA Process Simulation.
 
 This example demonstrates deterministic optimization using MOSKopt with
 advanced acquisition functions and Particle Swarm Optimization. It optimizes
-a chemical process using AVEVA Process Simulation integration, getting
+ibuprofen continuous manufacturing process using AVEVA Process Simulation integration, getting
 real simulation values from the simulation file.
 
 The example uses:
@@ -24,34 +24,26 @@ Custom configuration:
 
 Notes
 This example requires AVEVA Process Simulation and the AVEVA Python interface.
-The example connects to the "IbuprofenProcessSimulation" simulation for simulated process evaluation.
+The example connects to the "IbuprofenProcessSimulation" simulation for simulated process.
 """
 
 import os
-import warnings
 from datetime import datetime
 
 import numpy as np
 
 from core import AVEVASimulator, StochasticOptimizer
 
-# Suppress scikit-learn warnings for cleaner output
-warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
-warnings.filterwarnings(
-    "ignore", category=UserWarning, module="sklearn.gaussian_process"
-)
-
 
 def run_deterministic_example(
     max_iterations=75,
     num_seed_points=25,
     num_repetitions=1,
-    swarm_size=40,
-    max_iter_pso=40,
+    swarm_size=30,
+    max_iter_pso=20,
 ):
     """
     Run deterministic optimization example with MOSKopt and AVEVA Process Simulation.
-
     This function demonstrates deterministic optimization using the FEI
     acquisition function and Particle Swarm Optimization. It optimizes
     a chemical process by connecting to AVEVA Process Simulation and
@@ -60,15 +52,15 @@ def run_deterministic_example(
     Parameters
     ----------
     max_iterations : int, optional
-        Maximum number of adaptive iterations. Default: 75
+        Maximum number of adaptive iterations.
     num_seed_points : int, optional
-        Number of initial design points. Default: 25
+        Number of initial design points.
     swarm_size : int, optional
-        PSO swarm size for acquisition function optimization. Default: 10
+        PSO swarm size for acquisition function optimization.
     max_iter_pso : int, optional
-        Maximum PSO iterations for acquisition function optimization. Default: 20
+        Maximum PSO iterations for acquisition function optimization.
     num_repetitions : int, optional
-        Number of Monte Carlo repetitions for uncertainty handling. Default: 1 (deterministic)
+        Number of Monte Carlo repetitions for uncertainty handling.
 
     Notes
     -----
@@ -137,16 +129,14 @@ def run_deterministic_example(
         "Verbose": False,
         "SwarmSize": swarm_size,
         "MaxIterPSO": max_iter_pso,
-        "MaxDuplicateAttempts": 5,
+        "MaxDuplicateAttempts": 3,
         # Alternative infill criteria (users can change these):
-        # "InfillCriterion": "cAEI",              # Constrained Augmented Expected Improvement
-        # "InfillCriterion": "AEI",               # Augmented Expected Improvement
+        # "InfillCriterion": "cAEI",        # Alternative infill criteria (users can change these):
+        # "InfillCriterion": "mcFEI",             # multiple constrained Feasibility Enhanced Improvement
         # "InfillCriterion": "EI",                # Expected Improvement
-        # "InfillCriterion": "UCB",               # Upper Confidence Bound
-        # Alternative optimization solvers (users can change these):
-        # "InfillSolver": "lbfgs",                # L-BFGS local optimization
-        # "InfillSolver": "random",               # Random sampling
-        # AVEVA Process Simulation configuration
+        # "InfillCriterion": "AEI",               # Augmented Expected Improvement
+        # "InfillCriterion": "cAEI",              # Constrained Augmented Expected Improvement
+        # "InfillCriterion": "FEI",               # Feasibility Enhanced Constrained Improvement tion",
         "sim_name": "IbuprofenProcessSimulation",
         "snapshot_name": "Pro 1",
         # Independent variables (decision variables)
@@ -167,8 +157,7 @@ def run_deterministic_example(
             ("R2.tau", "min"),
             ("Yield", ""),
         ],
-        "NumCoupledConstraints": 3,
-        "CoupledConstraintTolerances": [1e-3] * 3,
+        "expected_constraints": 3,
         "constraint_names": ["R1.tau", "R2.tau", "Yield"],
         # Constraint configuration: tau1 >= 15, tau2 <= 120, yield >= 0.6
         "constraint_config": [">=", "<=", ">="],
@@ -208,14 +197,54 @@ def run_deterministic_example(
     # SETUP AND INITIALIZATION
     # ============================================================================
 
-    # Create results directory for plots and data
+    # Create results directory for plots and data (in project root optimization_results folder)
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(script_dir)
+    project_root = os.path.dirname(
+        script_dir
+    )  # Go up one level from examples to project root
     results_dir = os.path.join(project_root, "optimization_results")
     os.makedirs(results_dir, exist_ok=True)
     print(f"Results will be saved to: {results_dir}")
 
+    # Initialize AVEVA simulator for deterministic optimization
+    # print("\nInitializing AVEVA Process Simulation connection...")
     simulator = AVEVASimulator(clims, options)
+    # print("✓ AVEVA simulator initialized successfully")
+    # print(f"  Simulation file: {options['sim_name']}")
+    # print(f"  Snapshot: {options['snapshot_name']}")
+
+    # Test AVEVA connection before proceeding
+    try:
+        # Try to get a simple test simulation to verify connection
+        test_x = np.array([[15.0, 383.0, 0.2, 3.0, 343.0, 0.2]])  # Test point
+        test_f, test_g, test_status, test_f_std, test_g_std = simulator.simulate(test_x)
+
+        # Check if we got valid results (not fallback simulation)
+        if not test_status[0] or np.isnan(test_f[0]) or test_f[0] >= 1e6:
+            print("\n" + "=" * 60)
+            print("❌ AVEVA SIMULATION NOT AVAILABLE")
+            print("=" * 60)
+            print("The optimization could not connect to AVEVA Process Simulation.")
+            print("Please ensure:")
+            print("  1. AVEVA Process Simulation is running")
+            print("  2. The simulation file is open")
+            print("  3. AVEVA Python interface is properly configured")
+            print("\nThe example requires AVEVA simulation to run successfully.")
+            print("=" * 60)
+            return None
+
+    except Exception as e:
+        print("\n" + "=" * 60)
+        print("❌ AVEVA SIMULATION CONNECTION FAILED")
+        print("=" * 60)
+        print(f"Error connecting to AVEVA: {e}")
+        print("Please ensure:")
+        print("  1. AVEVA Process Simulation is running")
+        print("  2. The simulation file is open")
+        print("  3. AVEVA Python interface is properly configured")
+        print("\nThe example requires AVEVA simulation to run successfully.")
+        print("=" * 60)
+        return None
 
     # ============================================================================
     # OPTIMIZATION EXECUTION
@@ -250,7 +279,6 @@ def run_deterministic_example(
     var_names = ["V2", "T2", "RatioMEKIbap", "V1", "T1", "RatioDecIbap"]
 
     # Extract result data using helper function
-    best_x = extract_result_data(result, "x")
     x_history = extract_result_data(result, "x_history", [])
     f_history = extract_result_data(result, "f_history", [])
     g_history = extract_result_data(result, "g_history", [])
@@ -264,13 +292,16 @@ def run_deterministic_example(
     #    else:
     #       #print(f"  {name}: {value:.6f}")
 
+    # Constraint verification is handled internally by the simulator
+    constraint_names = ["tau1 >= 15 min", "tau2 <= 120 min", "yield >= 0.6"]
+    # Final constraint values are available in the optimization results if needed
     # ============================================================================
     # SAVE RESULTS TO CSV FILES
     # ============================================================================
 
-    print("\nSaving results to CSV files...")
+    # print("\nSaving results to CSV files...")
 
-    # Create results directory if it doesn't exist
+    # Create results directory if it doesn't exist (always in examples folder)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     results_dir = os.path.join(script_dir, "results")
     os.makedirs(results_dir, exist_ok=True)
@@ -308,10 +339,6 @@ def run_deterministic_example(
 
                 # Add constraint values
                 if i < len(g_history):
-                    constraint_names = options.get(
-                        "constraint_names",
-                        [f"Constraint_{j + 1}" for j in range(len(g_history[i]))],
-                    )
                     for j, constraint_name in enumerate(constraint_names):
                         row[f"{constraint_name}_violation"] = (
                             g_history[i][j] if j < len(g_history[i]) else np.nan
@@ -327,8 +354,8 @@ def run_deterministic_example(
         )
         # print(f"✓ Saved optimization history to: {history_csv_path}")
 
-    except Exception as e:
-        print(f"⚠ Warning: Could not save history CSV: {e}")
+    except Exception:
+        # print(f"⚠ Warning: Could not save history CSV: {e}")
         pass
 
     # 3. Save summary statistics
@@ -396,15 +423,97 @@ def run_deterministic_example(
             # print("⚠ No objective history to create summary statistics")
             pass
 
-    except Exception as e:
-        print(f"⚠ Warning: Could not save summary CSV: {e}")
+    except Exception:
+        # print(f"⚠ Warning: Could not save summary CSV: {e}")
         pass
+
+    # 4. Save failure analysis
+    failure_csv_path = os.path.join(
+        results_dir, f"deterministic_failure_analysis_{timestamp}.csv"
+    )
+    try:
+        # Calculate failure statistics from optimization results
+        total_evaluations = len(x_history)
+        # Count failed simulations from f_history (penalty values >= 1e6)
+        failed_evaluations = sum(1 for f in f_history if f >= 1e6)
+        failure_rate = (
+            failed_evaluations / total_evaluations if total_evaluations > 0 else 0
+        )
+
+        failure_data = {
+            "Metric": [
+                "Total_Evaluations",
+                "Failed_Evaluations",
+                "Failure_Rate",
+                "Successful_Evaluations",
+                "Success_Rate",
+            ],
+            "Value": [
+                total_evaluations,
+                failed_evaluations,
+                f"{failure_rate:.2%}",
+                total_evaluations - failed_evaluations,
+                f"{(1 - failure_rate):.2%}",
+            ],
+            "Description": [
+                "Total number of function evaluations",
+                "Number of failed simulations",
+                "Percentage of failed evaluations",
+                "Number of successful simulations",
+                "Percentage of successful evaluations",
+            ],
+        }
+
+        failure_df = pd.DataFrame(failure_data)
+        failure_df.to_csv(failure_csv_path, index=False)
+        # print(f"✓ Saved failure analysis to: {failure_csv_path}")
+
+    except Exception:
+        # print(f"⚠ Warning: Could not save failure analysis CSV: {e}")
+        pass
+
+    # print(f"\n📁 All CSV files saved to: {results_dir}")
+    # print("   - deterministic_adaptive_progress_csv_[timestamp].csv: Complete optimization trajectory")
+    # print("   - deterministic_final_results_[timestamp].csv: Optimal solution details")
+    # print("   - deterministic_summary_[timestamp].csv: Key performance metrics")
+    # print("   - deterministic_failure_analysis_[timestamp].csv: Failure analysis")
+
+    # ============================================================================
+    # FINAL SUMMARY
+    # ============================================================================
+
+    # Calculate and display failure statistics from optimization results
+    total_evaluations = len(x_history)
+    # Count failed simulations from f_history (penalty values >= 1e6)
+    failed_evaluations = sum(1 for f in f_history if f >= 1e6)
+    failure_rate = (
+        failed_evaluations / total_evaluations if total_evaluations > 0 else 0
+    )
+
+    # print("\n" + "=" * 60)
+    # print("DETERMINISTIC OPTIMIZATION COMPLETED SUCCESSFULLY!")
+    # print("=" * 60)
+    # print(f"Best LCO achieved: {best_fun:.2f} ¤/tonne")
+    # print(f"Iterations completed: {iteration}")
+    # print(f"Optimization converged: {converged}")
+    # print(f"Results saved to: {results_dir}")
+    # print(f"\nFailure Analysis:")
+    # print(f"  Total evaluations: {total_evaluations}")
+    # print(f"  Failed simulations: {failed_evaluations}")
+    # print(f"  Failure rate: {failure_rate:.2%}")
+    # print(f"  Success rate: {(1 - failure_rate):.2%}")
+    # print("\nNext steps:")
+    # print("   - Analyze CSV files for detailed results")
+    # print("   - Use plot_deterministic_from_csv.py for visualization")
+    # print("   - Modify parameters in options for different configurations")
+    # print("   - Try different acquisition functions or solvers")
 
     return result
 
 
 if __name__ == "__main__":
     # Set random seed for reproducibility
+    # This ensures consistent results across different runs
     np.random.seed(42)
 
     # print("=" * 80)
@@ -422,11 +531,4 @@ if __name__ == "__main__":
     # print(f"Iterations completed: {iteration}")
     # print(f"Converged: {converged}")
 
-    # Information about alternative configurations
-    # print("\nConfiguration Options:")
-    # print("   - Infill criteria: 'FEI' (current), 'cAEI', 'AEI', 'EI', 'UCB'")
-    # print("   - Optimization solvers: 'particleswarm' (current), 'lbfgs', 'random'")
-    # print("   - To use alternatives: Change the 'InfillCriterion' and 'InfillSolver' in options")
-    # print("   - PSO parameters are optimized for speed while maintaining quality")
-
-    # print("\nExample completed successfully!")
+    print("\nExample completed successfully!")
