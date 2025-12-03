@@ -50,8 +50,8 @@ def run_aveva_example(
     max_iterations=75,  # Full optimization iterations
     num_seed_points=25,  # Proper initial design for stochastic
     num_repetitions=100,  # Good balance of MC samples for uncertainty
-    swarm_size=30,  # Proper PSO size for stochastic optimization
-    max_iter_pso=20,  # Proper PSO iterations for quality
+    swarm_size=40,  # Proper PSO size for stochastic optimization
+    max_iter_pso=40,  # Proper PSO iterations for quality
 ):
     """
     Run stochastic optimization example with MOSKopt and AVEVA Process Simulation.
