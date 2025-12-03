@@ -65,6 +65,7 @@ MOSKopt_Python/
 │   ├── Pharma.bnk
 │   ├── Pharma.lb1
 │   ├── Pharma.lb2
+├── plot_optimization_results.py  # Results plotting tool
 ├── setup.py                      # Package setup
 ├── README.md                     # This file
 └── requirements.txt              # Dependencies
