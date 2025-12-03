@@ -57,7 +57,7 @@ MOSKopt_Python/
 │   └── combined_core.cpython-312.pyc # Core implementation (compiled with Python 3.12)
 ├── examples/                     
 │   ├── deterministic_ibuprofen.py    # Deterministic optimization example
-│   └── stochastic_ibuprofen.py      # Stochastic optimization example
+│   └── stochastic_ibuprofen.py       # Stochastic optimization example
 ├── simulation/ 
 │   ├── IbuprofenProcessSimulation
 │   ├── Pharma/BASE/
@@ -65,7 +65,8 @@ MOSKopt_Python/
 │   ├── Pharma.bnk
 │   ├── Pharma.lb1
 │   ├── Pharma.lb2
-├── plot_optimization_results.py  # Results plotting tool
+├── plot_from_checkpoint.py       # Results plotting 
+├── plot_optimization_results.py  # Results plotting 
 ├── setup.py                      # Package setup
 ├── README.md                     # This file
 └── requirements.txt              # Dependencies
