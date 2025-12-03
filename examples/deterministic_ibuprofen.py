@@ -301,9 +301,12 @@ def run_deterministic_example(
 
     # print("\nSaving results to CSV files...")
 
-    # Create results directory if it doesn't exist (always in examples folder)
+    # Use the same results directory as the main optimization (project root optimization_results folder)
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    results_dir = os.path.join(script_dir, "results")
+    project_root = os.path.dirname(
+        script_dir
+    )  # Go up one level from examples to project root
+    results_dir = os.path.join(project_root, "optimization_results")
     os.makedirs(results_dir, exist_ok=True)
 
     # Generate timestamp for unique file names
