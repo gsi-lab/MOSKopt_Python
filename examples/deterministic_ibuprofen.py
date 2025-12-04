@@ -134,7 +134,8 @@ def run_deterministic_example(
         "Maximize": False,  # Set to True for maximization, False for minimization (default)
         # Constraint settings
         "NumCoupledConstraints": 3,  # Number of constraints (can be set to 0 if no constraints)
-        "CoupledConstraintTolerances": [],  # Constraint tolerances (empty list [] if no constraints)
+        "CoupledConstraintTolerances": [1e-3]
+        * 3,  # Constraint tolerances (can be empty list [] if no constraints)
         # Alternative infill criteria (users can change these):
         # "InfillCriterion": "mcFEI",             # multiple constrained Feasibility Enhanced Improvement (for constrained problems)
         # "InfillCriterion": "EI",                # Expected Improvement (for unconstrained problems)
