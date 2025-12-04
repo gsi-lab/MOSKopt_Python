@@ -130,15 +130,25 @@ def run_deterministic_example(
         "SwarmSize": swarm_size,
         "MaxIterPSO": max_iter_pso,
         "MaxDuplicateAttempts": 3,
+        # Optimization direction
+        "Maximize": False,  # Set to True for maximization, False for minimization (default)
+        # Constraint settings
+        "NumCoupledConstraints": 3,  # Number of constraints (can be set to 0 if no constraints)
+        "CoupledConstraintTolerances": [],  # Constraint tolerances (empty list [] if no constraints)
         # Alternative infill criteria (users can change these):
-        # "InfillCriterion": "cAEI",        # Alternative infill criteria (users can change these):
-        # "InfillCriterion": "mcFEI",             # multiple constrained Feasibility Enhanced Improvement
-        # "InfillCriterion": "EI",                # Expected Improvement
-        # "InfillCriterion": "AEI",               # Augmented Expected Improvement
-        # "InfillCriterion": "cAEI",              # Constrained Augmented Expected Improvement
-        # "InfillCriterion": "FEI",               # Feasibility Enhanced Constrained Improvement tion",
-        "sim_name": "IbuprofenProcessSimulation",
-        "snapshot_name": "Pro 1",
+        # "InfillCriterion": "mcFEI",             # multiple constrained Feasibility Enhanced Improvement (for constrained problems)
+        # "InfillCriterion": "EI",                # Expected Improvement (for unconstrained problems)
+        # "InfillCriterion": "AEI",               # Augmented Expected Improvement (for stochastic problems)
+        # "InfillCriterion": "cAEI",              # Constrained Augmented Expected Improvement (for constrained stochastic problems)
+        # "InfillCriterion": "FEI",               # Feasibility Enhanced Constrained Improvement (for highly constrained problems)
+        # Note: For unconstrained problems, set NumCoupledConstraints=0 and use EI or AEI infill criteria
+        # AVEVA Process Simulation configuration
+        "sim_name": "IbuprofenProcessSimulation",  # AVEVA simulation file name
+        "snapshot_name": "Pro 1",  # AVEVA snapshot name (single snapshot mode)
+        # Dual snapshot mode (optional - for different operating conditions):
+        # "snapshot_name_1": "Pro 1",     # Snapshot 1 (e.g., for uncertain_var > threshold)
+        # "snapshot_name_2": "Pro 2",     # Snapshot 2 (e.g., for uncertain_var <= threshold)
+        # "snapshot_threshold": 150.0,    # Threshold value for snapshot selection
         # Independent variables (decision variables)
         "ind_vars": [
             ("R2.V", "m3"),
