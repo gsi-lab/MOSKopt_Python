@@ -140,7 +140,6 @@ def run_deterministic_example(
         # "InfillCriterion": "mcFEI",             # multiple constrained Feasibility Enhanced Improvement (for constrained problems)
         # "InfillCriterion": "EI",                # Expected Improvement (for unconstrained problems)
         # "InfillCriterion": "AEI",               # Augmented Expected Improvement (for stochastic problems)
-        # "InfillCriterion": "cAEI",              # Constrained Augmented Expected Improvement (for constrained stochastic problems)
         # "InfillCriterion": "FEI",               # Feasibility Enhanced Constrained Improvement (for highly constrained problems)
         # Note: For unconstrained problems, set NumCoupledConstraints=0 and use EI or AEI infill criteria
         # AVEVA Process Simulation configuration
