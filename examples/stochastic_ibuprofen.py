@@ -132,7 +132,7 @@ def run_aveva_example(
         "MaxIterations": max_iterations,  # Number of adaptive iterations
         "NumSeedPoints": num_seed_points,  # Number of initial design points
         "NumRepetitions": num_repetitions,  # Monte Carlo samples for uncertainty
-        "InfillCriterion": "mcFEI",  # multiple constrained FEI (fixed)
+        "InfillCriterion": "mcFEI",  # multiple constrained FEI 
         "InfillSolver": "particleswarm",  # Particle Swarm Optimization (fixed)
         "Verbose": False,  # Enable progress output
         "SwarmSize": swarm_size,  # PSO swarm size (optimized default)
@@ -148,7 +148,6 @@ def run_aveva_example(
         # "InfillCriterion": "mcFEI",             # multiple constrained Feasibility Enhanced Improvement (for constrained problems)
         # "InfillCriterion": "EI",                # Expected Improvement (for unconstrained problems)
         # "InfillCriterion": "AEI",               # Augmented Expected Improvement (for stochastic problems)
-        # "InfillCriterion": "cAEI",              # Constrained Augmented Expected Improvement (for constrained stochastic problems)
         # "InfillCriterion": "FEI",               # Feasibility Enhanced Constrained Improvement (for highly constrained problems)
         # Note: For unconstrained problems, set NumCoupledConstraints=0 and use EI or AEI infill criteria
         # AVEVA Process Simulation configuration
