@@ -1,6 +1,6 @@
 # MOSKopt_Python
 
-Advanced simulation-based optimization framework with AVEVA Process Simulation integration, featuring enhanced acquisition functions and robust failure handling.
+Advanced simulation-based optimization framework with AVEVA™ Process Simulation integration, featuring enhanced acquisition functions and robust failure handling.
 
 ## Project Purpose and Context
 
