@@ -51,13 +51,13 @@ Pharma.lb2
 ```
 MOSKopt_Python/
 ├── core/                         
-│   ├── __init__.py                   # Package initialization
-│   ├── combined_core.cpython-310.pyc # Core implementation (compiled with Python 3.10)
-│   ├── combined_core.cpython-311.pyc # Core implementation (compiled with Python 3.11)
-│   └── combined_core.cpython-312.pyc # Core implementation (compiled with Python 3.12)
+│   ├── __init__.py                         # Package initialization
+│   ├── combined_core.cpython-310.pyc       # Core implementation (compiled with Python 3.10)
+│   ├── combined_core.cpython-311.pyc       # Core implementation (compiled with Python 3.11)
+│   └── combined_core.cpython-312.pyc       # Core implementation (compiled with Python 3.12)
 ├── examples/                     
-│   ├── deterministic_ibuprofen.py    # Deterministic optimization example
-│   └── stochastic_ibuprofen.py       # Stochastic optimization example
+│   ├── deterministic_ibuprofen.py          # Deterministic optimization example
+│   └── stochastic_ibuprofen.py             # Stochastic optimization example
 ├── simulation/ 
 │   ├── IbuprofenProcessSimulation
 │   ├── Pharma/BASE/
@@ -65,12 +65,14 @@ MOSKopt_Python/
 │   ├── Pharma.bnk
 │   ├── Pharma.lb1
 │   ├── Pharma.lb2
-├── MOSKopt_Python Gem Instructions.md        #AI Configuration Assistant
-├── README.md                     # This file
-├── plot_from_checkpoint.py       # Results plotting 
-├── plot_optimization_results.py  # Results plotting 
-└── requirements.txt              # Dependencies
-├── setup.py                      # Package setup
+├── .gitignore                              
+├── LICENSE                                 
+├── MOSKopt_Python Gem Instructions.md      # AI Configuration Assistant
+├── README.md                               
+├── plot_from_checkpoint.py                 # Results plotting 
+├── plot_optimization_results.py            # Results plotting 
+├── requirements.txt                        # Dependencies
+└── setup.py                                # Package setup
 ```
 
 ## Acknowledgement
