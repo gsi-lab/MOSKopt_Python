@@ -65,11 +65,12 @@ MOSKopt_Python/
 │   ├── Pharma.bnk
 │   ├── Pharma.lb1
 │   ├── Pharma.lb2
+├── MOSKopt_Python Gem Instructions.md        #AI Configuration Assistant
+├── README.md                     # This file
 ├── plot_from_checkpoint.py       # Results plotting 
 ├── plot_optimization_results.py  # Results plotting 
-├── setup.py                      # Package setup
-├── README.md                     # This file
 └── requirements.txt              # Dependencies
+├── setup.py                      # Package setup
 ```
 
 ## Acknowledgement
