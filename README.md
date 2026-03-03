@@ -40,7 +40,7 @@ python examples/stochastic_ibuprofen.py
 - **AVEVA Python Interface** (`simcentralconnect`)
 
 ## AVEVA Custom Libraries Setup for Ibuprofen Example
-For the AVEVA Process Simulation examples to run correctly, you need to place the provided simulation library files into your My Thermo Data directory on your computer:
+For the AVEVA Process Simulation examples to run correctly, you need to place the provided simulation library files into your My Thermo Data directory ("C:\Users\xxx\My Thermo Data") on your computer:
 Pharma.BASE.cmp
 Pharma.bnk
 Pharma.lb1
