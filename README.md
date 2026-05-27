@@ -2,6 +2,8 @@
 
 Advanced simulation-based optimization framework with AVEVA™ Process Simulation integration, featuring enhanced acquisition functions and robust failure handling.
 
+<img width="1803" height="387" alt="image" src="https://github.com/user-attachments/assets/45221252-cb35-434e-a8ea-2e71233eeca7" />
+
 ## Project Purpose and Context
 
 MOSKopt_Python is a Python implementation of the MOSKopt (Simulation-Based Stochastic Kriging Optimization framework), designed for chemical process optimization under uncertainty. This implementation extends the original MATLAB version developed by Resul Al. (https://github.com/gsi-lab/MOSKopt) with enhanced features and performance optimizations. 
